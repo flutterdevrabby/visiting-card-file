@@ -1,4 +1,156 @@
+
+
 <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Visiting Card</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #eef2f7;
+}
+
+.card {
+  background: white;
+  width: 100%;
+  max-width: 380px;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 35px #0002;
+}
+
+.avatar {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  background: #e5ebff;
+  color: #2457d6;
+  display: grid;
+  place-items: center;
+  font-size: 35px;
+  margin: auto;
+}
+
+h2 { margin-bottom: 5px; }
+.designation { color: #2457d6; }
+.company { color: #777; }
+
+.info {
+  text-align: left;
+  margin-top: 25px;
+  line-height: 2.5;
+  overflow-wrap: anywhere;
+}
+
+.info a {
+  color: #333;
+  text-decoration: none;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  background: #2457d6;
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <div class="avatar">👤</div>
+
+  <h2 id="name">Loading...</h2>
+  <div class="designation" id="designation"></div>
+  <div class="company" id="company"></div>
+
+  <div class="info">
+    <div>📞 <a id="phone"></a></div>
+    <div>✉️ <a id="email"></a></div>
+  </div>
+
+  <button onclick="saveContact()">Save Contact</button>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+
+const user = {
+  name: params.get('name') || '',
+  email: params.get('email') || '',
+  phone: params.get('phone') || '',
+  company: params.get('company') || '',
+  designation: params.get('designation') || ''
+};
+
+document.getElementById('name').textContent = user.name;
+document.getElementById('designation').textContent = user.designation;
+document.getElementById('company').textContent = user.company;
+
+const phone = document.getElementById('phone');
+phone.textContent = user.phone;
+phone.href = 'tel:' + user.phone;
+
+const email = document.getElementById('email');
+email.textContent = user.email;
+email.href = 'mailto:' + user.email;
+
+function escapeVCard(value) {
+  return value.replace(/\\/g, '\\\\')
+    .replace(/\n/g, '\\n')
+    .replace(/,/g, '\\,')
+    .replace(/;/g, '\\;');
+}
+
+function saveContact() {
+  const vcard = [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    `FN:${escapeVCard(user.name)}`,
+    `EMAIL:${escapeVCard(user.email)}`,
+    `TEL:${escapeVCard(user.phone)}`,
+    `ORG:${escapeVCard(user.company)}`,
+    `TITLE:${escapeVCard(user.designation)}`,
+    'END:VCARD'
+  ].join('\r\n');
+
+  const blob = new Blob([vcard], {
+    type: 'text/vcard;charset=utf-8'
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'contact.vcf';
+  a.click();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+</script>
+
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
 <html>
 
 <head>
@@ -85,4 +237,4 @@ END:VCARD`;
 </body>
 
 </html>
-
+ -->
