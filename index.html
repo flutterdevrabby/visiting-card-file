@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rabbi - Visiting Card</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 5px 25px #0002;
+        }
+
+        h2 {
+            margin-bottom: 5px;
+        }
+
+        p {
+            color: #555;
+        }
+
+        button {
+            background: #2457d6;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>Rabbi</h2>
+        <p>Software Engineer</p>
+        <h3>Integrity 360 Degree</h3>
+
+        <p>📞 +8801712345678</p>
+        <p>✉️ rabbi@example.com</p>
+
+        <button onclick="saveContact()">Save Contact</button>
+    </div>
+
+    <script>
+        function saveContact() {
+            const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:Rabbi
+ORG:Integrity 360 Degree
+TITLE:Software Engineer
+TEL:+8801712345678
+EMAIL:rabbi@example.com
+END:VCARD`;
+
+            const blob = new Blob([vcard], {
+                type: 'text/vcard'
+            });
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Rabbi.vcf';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+
+</body>
+
+</html>
+
